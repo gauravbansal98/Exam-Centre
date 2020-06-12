@@ -1,0 +1,27 @@
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install python3-opencv
+sudo apt install python3-pip
+sudo apt-get install build-essential cmake pkg-config libx11-dev libatlas-base-dev libgtk-3-dev 
+pip3 install dlib
+pip3 install tensorflow==1.14
+pip3 install face_recognition
+pip3 install flask
+sudo apt-get install python3-pyaudio
+pip3 install mtcnn
+git clone https://github.com/gauravbansal98/Exam-Centre.git
+
+pip3 install scikit-image
+pip3 install webrtcvad
+
+
+#deepgaze
+sudo apt-get install libopencv-dev
+git clone https://github.com/mpatacchiola/deepgaze.git
+cd deepgaze
+sudo python3 setup.py install
+
+
+sudo apt-get install nginx
+sudo apt-get install gunicorn3
+

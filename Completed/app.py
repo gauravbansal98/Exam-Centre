@@ -4,9 +4,12 @@ import face_recog
 import background_check
 import head_pose
 import vad
+import requests
+from flask import jsonify
 
 
 app = Flask(__name__)
+app.instance_path = "static"
 
 @app.route('/')
 def hello():
@@ -15,43 +18,99 @@ def hello():
 
 @app.route('/background_check', methods=['POST'])   
 def compare_background():
-    files = ['1', '2']
-    [request.files[file].save(os.path.join("static", request.files[file].filename)) for file in files]
-    filenames = [request.files[file].filename for file in files]
-    print(filenames)
-    string = background_check.compare_img(filenames)
-    [os.remove(os.path.join("static", filename)) for filename in filenames]
-    return string
+    file_names = []
+    string = {}
+    for url in request.form:
+        file_names.append(url+".jpg")
+        r = requests.get(request.form[url])
+        with app.open_instance_resource(url+".jpg", 'wb') as f:
+            f.write(r.content)
+    for file in request.files:
+        file_names.append(request.files[file].filename)
+        request.files[file].save( os.path.join("static", request.files[file].filename))
+    if len(file_names) != 2:
+        string['msg'] = "Number of files given is incorrect"
+        return jsonify(string)
+    string = background_check.compare_img(file_names)
+    [os.remove(os.path.join("static", filename)) for filename in file_names]
+    return jsonify(string)
+    
 
 @app.route('/face_match', methods=['POST'])
 def face_match():
-    files = ['compare', '1', '2', '3', '4', '5']
-    [request.files[file].save(os.path.join("static", request.files[file].filename)) for file in files]
-    filenames = [request.files[file].filename for file in files]
-    string = face_recog.match_faces(filenames)
-    [os.remove(os.path.join("static", filename)) for filename in filenames]
-    return string
+    file_names = []
+    string = {}
+    for url in request.form:
+        file_names.append(url+".jpg")
+        r = requests.get(request.form[url])
+        with app.open_instance_resource(url+".jpg", 'wb') as f:
+            f.write(r.content)
+    for file in request.files:
+        file_names.append(request.files[file].filename)
+        request.files[file].save( os.path.join("static", request.files[file].filename))
+    if len(file_names) == 0:
+        string['msg'] = "No file is found"
+        return string
+    string = face_recog.match_faces(file_names)
+    [os.remove(os.path.join("static", filename)) for filename in file_names]
+    return jsonify(string)
     
 @app.route('/count_faces', methods=['POST'])
 def no_of_faces():
-    request.files['1'].save(os.path.join("static", request.files['1'].filename))
-    string = face_recog.count_faces(request.files['1'].filename)
-    os.remove(os.path.join("static", request.files['1'].filename))
-    return string
+    string = {}
+    file_name = ""
+    for url in request.form:
+        file_name = url+".jpg"
+        r = requests.get(request.form[url])
+        with app.open_instance_resource(url+".jpg", 'wb') as f:
+            f.write(r.content)
+    for file in request.files:
+        file_name = request.files[file].filename
+        request.files[file].save(os.path.join("static", request.files[file].filename))
+    if(file_name == ""):
+        string['msg'] = "No file is found"
+        return jsonify(string)
+    string = face_recog.count_faces(file_name)
+    os.remove(os.path.join("static", file_name))
+    return jsonify(string)
 
 @app.route('/voice_detect', methods=['POST'])
 def voice_detect():
-    request.files['audio'].save(os.path.join("static", request.files['audio'].filename))
-    string = vad.detect_audio(request.files['audio'].filename)
-    os.remove(os.path.join("static", request.files['audio'].filename))
-    return string
+    file_name = ""
+    string = {}
+    for url in request.form:
+        file_name = url+".wav"
+        r = requests.get(request.form[url])
+        with app.open_instance_resource(url+".wav", 'wb') as f:
+            f.write(r.content)
+    for file in request.files:
+        file_name = request.files[file].filename
+        request.files[file].save(os.path.join("static", request.files[file].filename)) 
+    if(file_name == ""):
+        string['msg'] = "No file is found"
+        return jsonify(string)   
+    string = vad.detect_audio(file_name)
+    os.remove(os.path.join("static", file_name))
+    return jsonify(string)
 
 @app.route('/head_pose', methods=['POST'])
 def head_pose_estimation():
-    request.files['1'].save(os.path.join("static", request.files['1'].filename))
-    string = head_pose.detect_pose(request.files["1"].filename)
-    os.remove(os.path.join("static", request.files['1'].filename))
-    return string
+    file_name = ""
+    string = {}
+    for url in request.form:
+        file_name = url+".jpg"
+        r = requests.get(request.form[url])
+        with app.open_instance_resource(url+".jpg", 'wb') as f:
+            f.write(r.content)
+    for file in request.files:
+        file_name = request.files[file].filename
+        request.files[file].save(os.path.join("static", request.files[file].filename))
+    if(file_name == ""):
+        string['msg'] = "No file is found" 
+        return jsonify(string)
+    string = head_pose.detect_pose(file_name)
+    os.remove(os.path.join("static", file_name))
+    return jsonify(string)
 
 
 if __name__ == '__main__':

@@ -10,6 +10,9 @@ def read_wave(path):
     """
     with contextlib.closing(wave.open(path, 'rb')) as wf:
         num_channels = wf.getnchannels()
+        # print(num_channels)
+        # print(wf.getsampwidth())
+        # print(wf.getframerate())
         assert num_channels == 1
         sample_width = wf.getsampwidth()
         assert sample_width == 2
@@ -116,6 +119,7 @@ def vad_collector(sample_rate, frame_duration_ms,
 
 
 def detect_audio(audio_file_name):
+    return_dict = {}
     audio, sample_rate = read_wave(os.path.join("static", audio_file_name))
     vad = webrtcvad.Vad(2)
     frames = frame_generator(30, audio, sample_rate)
@@ -124,5 +128,9 @@ def detect_audio(audio_file_name):
     number = 0
     for i, segment in enumerate(segments):
         number += 1
-    string = "Total " + str(number) + " segments of voice detected"
-    return string
+    return_dict['count'] = number
+    if(number > 0):
+        return_dict['msg'] = "Voice detected"
+    else:
+        return_dict['msg'] = "Voice not detected"
+    return return_dict
