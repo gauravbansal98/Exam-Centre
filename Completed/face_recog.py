@@ -48,6 +48,10 @@ def match_faces(filenames):
         if(len(encodings) > 0):
             gt_encodings.append(encodings[0])
     matches = face_recognition.compare_faces(gt_encodings, encoding_to_match[0], tolerance = .6)
+    if(float(sum(matches)) > .5*len(matches)):
+        return_dict['code'] = "M"
+    else:
+        return_dict['code'] = "NM"
     return_dict['count'] = float(sum(matches))
     return_dict['msg'] = "Face is found"
     return return_dict
@@ -63,6 +67,7 @@ def count_faces(image_name):
     for face in faces:
         confidences.append((face['confidence']))
         length += 1
+    return_dict['code'] = length
     return_dict['scores'] = confidences
     return_dict['msg'] = "Number of faces found " + str(length) 
     return return_dict

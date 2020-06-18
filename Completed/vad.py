@@ -131,6 +131,8 @@ def detect_audio(audio_file_name):
     return_dict['count'] = number
     if(number > 0):
         return_dict['msg'] = "Voice detected"
+        return_dict['code'] = "D"
     else:
         return_dict['msg'] = "Voice not detected"
+        return_dict['code'] = "ND"
     return return_dict

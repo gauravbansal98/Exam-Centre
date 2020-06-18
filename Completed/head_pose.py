@@ -22,6 +22,7 @@ def detect_pose(filename):
     if(len(faces) > 0):
         yaws = []
         messages = []
+        codes = []
         for face in faces:
             if(face['confidence'] > .9):
                 x, y, width, height = face['box']
@@ -39,16 +40,22 @@ def detect_pose(filename):
                 yaws.append(float(yaw[0][0][0]))
                 if(yaw[0][0][0] > -30 and yaw[0][0][0] < 40):
                     messages.append("Looking Straight")
+                    codes.append("LS")
                 elif(yaw[0][0][0] < -30 and yaw[0][0][0] > -55):
                     messages.append("Looking left")
+                    codes.append("LL")
                 elif(yaw[0][0][0] < -55):
                     messages.append("Looking extreme left")
+                    codes.append("LEL")
                 elif(yaw[0][0][0] > 40 and yaw[0][0][0] < 65):
                     messages.append("Looking right")
+                    codes.append("LR")
                 elif(yaw[0][0][0] > 65):
                     messages.append("Looking extreme right")
+                    codes.append("LER")
         return_dict['yaws'] = yaws
         return_dict['msg'] = messages
+        return_dict['code'] = codes
     else:
         return_dict['msg'] = "Did not found the face"
     

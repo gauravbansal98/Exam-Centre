@@ -15,7 +15,9 @@ def compare_img(filenames):
     return_dict['score'] = s
     if(s < .65):
         return_dict['msg'] = "Image is changing"
+        return_dict['code'] = "IC"
     else:
         return_dict['msg'] = "Image is not changing"
+        return_dict['code'] = 'INC'
     
     return return_dict
