@@ -22,7 +22,7 @@ def background(request):
         file_names.append(url+".jpg")
     for file in request.files:
         file_names.append(request.files[file].filename)
-    if len(file_names) != 2:
+    if len(file_names) < 2:
         string['msg'] = "Number of files given is incorrect"
         return string
     string = background_check.compare_img(file_names)
