@@ -86,7 +86,6 @@ def all():
     for file in request.files:
         file_names.append(request.files[file].filename)
     string = {}
-    print("bjb")
     string['face_match'] = match(request)
     string['head_pose_estimation'] = estimation(request)
     string['no_of_faces'] = no_faces(request)
