@@ -25,7 +25,7 @@ def background(request):
     if len(file_names) < 2:
         string['msg'] = "Number of files given is incorrect"
         return string
-    string = background_check.compare_img(file_names)
+    string = background_check.compare_img(file_names[-2:])
     return string
 
 def match(request):
@@ -52,10 +52,8 @@ def no_faces(request):
     for url in request.form:
         file_name = url+".jpg"
         r = requests.get(request.form[url])
-        break
     for file in request.files:
         file_name = request.files[file].filename
-        break
     if(file_name == ""):
         string['msg'] = "No file is found"
         return jsonify(string)
@@ -67,10 +65,8 @@ def estimation(request):
     string = {}
     for url in request.form:
         file_name = url+".jpg"
-        break
     for file in request.files:
         file_name = request.files[file].filename
-        break
     if(file_name == ""):
         string['msg'] = "No file is found" 
         return string
