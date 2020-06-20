@@ -15,6 +15,85 @@ app.instance_path = "static"
 def hello():
     return "hello"
 
+def background(request):
+    file_names = []
+    string = {}
+    for url in request.form:
+        file_names.append(url+".jpg")
+    for file in request.files:
+        file_names.append(request.files[file].filename)
+    if len(file_names) != 2:
+        string['msg'] = "Number of files given is incorrect"
+        return string
+    string = background_check.compare_img(file_names)
+    return string
+
+def match(request):
+    file_names = []
+    string = {}
+    for url in request.form:
+        file_names.append(url+".jpg")
+        r = requests.get(request.form[url])
+        with app.open_instance_resource(url+".jpg", 'wb') as f:
+            f.write(r.content)
+    for file in request.files:
+        file_names.append(request.files[file].filename)
+        request.files[file].save( os.path.join("static", request.files[file].filename))
+    if len(file_names) == 0:
+        string['msg'] = "No file is found"
+        return string
+    string = face_recog.match_faces(file_names)
+    return string
+
+def no_faces(request):
+    print("bhbvjhv")
+    string = {}
+    file_name = ""
+    for url in request.form:
+        file_name = url+".jpg"
+        r = requests.get(request.form[url])
+        break
+    for file in request.files:
+        file_name = request.files[file].filename
+        break
+    if(file_name == ""):
+        string['msg'] = "No file is found"
+        return jsonify(string)
+    string = face_recog.count_faces(file_name)
+    return string
+
+def estimation(request):
+    file_name = ""
+    string = {}
+    for url in request.form:
+        file_name = url+".jpg"
+        break
+    for file in request.files:
+        file_name = request.files[file].filename
+        break
+    if(file_name == ""):
+        string['msg'] = "No file is found" 
+        return string
+    print(file_name)
+    string = head_pose.detect_pose(file_name)
+    return string
+
+@app.route('/all', methods=['POST'])
+def all():
+    file_names = []
+    for url in request.form:
+        file_names.append(url+".jpg")
+    for file in request.files:
+        file_names.append(request.files[file].filename)
+    string = {}
+    print("bjb")
+    string['face_match'] = match(request)
+    string['head_pose_estimation'] = estimation(request)
+    string['no_of_faces'] = no_faces(request)
+    string['background_match'] = background(request)
+    [os.remove(os.path.join("static", filename)) for filename in file_names]
+    return jsonify(string)
+
 
 @app.route('/background_check', methods=['POST'])   
 def compare_background():
@@ -50,7 +129,7 @@ def face_match():
         request.files[file].save( os.path.join("static", request.files[file].filename))
     if len(file_names) == 0:
         string['msg'] = "No file is found"
-        return string
+        return jsonify(string)
     string = face_recog.match_faces(file_names)
     [os.remove(os.path.join("static", filename)) for filename in file_names]
     return jsonify(string)
