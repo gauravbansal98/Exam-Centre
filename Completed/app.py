@@ -25,6 +25,7 @@ def background(request):
     if len(file_names) < 2:
         string['msg'] = "Number of files given is incorrect"
         return string
+    file_names = sorted(file_names)
     string = background_check.compare_img(file_names[-2:])
     return string
 
@@ -42,36 +43,36 @@ def match(request):
     if len(file_names) == 0:
         string['msg'] = "No file is found"
         return string
+    file_names = sorted(file_names)
     string = face_recog.match_faces(file_names)
     return string
 
 def no_faces(request):
-    print("bhbvjhv")
+    file_names = []
     string = {}
-    file_name = ""
     for url in request.form:
-        file_name = url+".jpg"
-        r = requests.get(request.form[url])
+        file_names.append(url+".jpg")
     for file in request.files:
-        file_name = request.files[file].filename
-    if(file_name == ""):
+        file_names.append(request.files[file].filename)
+    if(file_names == []):
         string['msg'] = "No file is found"
-        return jsonify(string)
-    string = face_recog.count_faces(file_name)
+        return string
+    file_names = sorted(file_names)
+    string = face_recog.count_faces(file_names[-1])
     return string
 
 def estimation(request):
-    file_name = ""
+    file_names = []
     string = {}
     for url in request.form:
-        file_name = url+".jpg"
+        file_names.append(url+".jpg")
     for file in request.files:
-        file_name = request.files[file].filename
-    if(file_name == ""):
+        file_names.append(request.files[file].filename)
+    if(file_names == []):
         string['msg'] = "No file is found" 
         return string
-    print(file_name)
-    string = head_pose.detect_pose(file_name)
+    file_names = sorted(file_names)
+    string = head_pose.detect_pose(file_names[-1])
     return string
 
 @app.route('/all', methods=['POST'])
