@@ -128,7 +128,7 @@ def face_match():
     if len(file_names) == 0:
         string['msg'] = "No file is found"
         return jsonify(string)
-    file_names = sorted(file_names)
+    # file_names = sorted(file_names)
     string = face_recog.match_faces(file_names)
     [os.remove(os.path.join("static", filename)) for filename in file_names]
     return jsonify(string)
