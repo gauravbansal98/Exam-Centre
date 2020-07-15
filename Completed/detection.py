@@ -45,10 +45,6 @@ class Detector():
 
     def detect_objects(self, image):
         image_np_expanded = np.expand_dims(image, axis=0)
-        # Actual detection.
-        (boxes, scores, classes, num_detections) = self.sess.run(
-            [self.boxes, self.scores, self.classes, self.num_detections],
-            feed_dict={self.image_tensor: image_np_expanded})
         string = {}
         
         image, names, scores = vis_util.visualize_boxes_and_labels_on_image_array(
