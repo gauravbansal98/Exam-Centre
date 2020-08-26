@@ -13,8 +13,8 @@ NUM_CLASSES = 90
 
 PATH_TO_LABELS = 'mscoco_label_map.pbtxt'
 
-# PATH_TO_CKPT = 'ssd_resnet50_v1_fpn_shared_box_predictor_640x640_coco14_sync_2018_07_03/frozen_inference_graph.pb'
-PATH_TO_CKPT = 'ssd_inception_v2_coco_2018_01_28/frozen_inference_graph.pb'
+PATH_TO_CKPT = 'ssd_resnet50_v1_fpn_shared_box_predictor_640x640_coco14_sync_2018_07_03/frozen_inference_graph.pb'
+# PATH_TO_CKPT = 'ssd_inception_v2_coco_2018_01_28/frozen_inference_graph.pb'
 objects = ["person", "bench", "cat", "dog", "handbag", "tie", "suitcase", "bottle", "wine glass", "cup",
         "knife", "spoon", "bowl", "chair", "bed", "dinnig table", "tv", "laptop", "mouse", "remote", "keyboard",
         "cell phone", "book", "clock", "scissors"]
