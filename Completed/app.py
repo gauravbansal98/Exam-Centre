@@ -152,25 +152,6 @@ def no_of_faces():
     os.remove(os.path.join("static", file_name))
     return jsonify(string)
 
-@app.route('/detect_objects', methods=['POST'])
-def detect_objects():
-    string = {}
-    file_name = ""
-    for url in request.form:
-        file_name = url+".jpg"
-        r = requests.get(request.form[url])
-        with app.open_instance_resource(url+".jpg", 'wb') as f:
-            f.write(r.content)
-    for file in request.files:
-        file_name = request.files[file].filename
-        request.files[file].save(os.path.join("static", request.files[file].filename))
-    if(file_name == ""):
-        string['msg'] = "No file is found"
-        return jsonify(string)
-    string = detection.find_objects(file_name)
-    os.remove(os.path.join("static", file_name))
-    return jsonify(string)
-
 @app.route('/voice_detect', methods=['POST'])
 def voice_detect():
     file_name = ""
