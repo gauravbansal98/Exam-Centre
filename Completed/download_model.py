@@ -9,7 +9,7 @@ from collections import defaultdict
 from io import StringIO
 from matplotlib import pyplot as plt
 
-MODEL_NAME = 'ssd_resnet50_v1_fpn_shared_box_predictor_640x640_coco14_sync_2018_07_03'
+MODEL_NAME = 'ssd_inception_v2_coco_2018_01_28/frozen_inference_graph.pb'
 MODEL_FILE = MODEL_NAME + '.tar.gz'
 DOWNLOAD_BASE = 'http://download.tensorflow.org/models/object_detection/'
 
